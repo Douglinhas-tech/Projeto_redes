@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+message float3 {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+}
+
+enum PacketType {
+  HANDSHAKE = 0;
+  HANDSHAKE_ACK = 1;
+  HEARTBEAT = 2;
+  DISCONNECT = 4;
+  GAMEUPDATE = 5;
+}
+
+message Packet {
+  PacketType type = 1;
+  oneof payload {
+    HandshakePacket handshake_payload = 2;
+    HandshakeAckPacket handshake_ack_payload = 3;
+    HeartbeatPacket heartbeat_payload = 4;
+    DisconnectPacket disconnect_payload = 6;
+    GameUpdate Gameupdate_payload = 7;
+  }
+}
+
+message HandshakePacket {
+  string client_version = 1;
+}
+
+message HandshakeAckPacket {
+  bool connection_successful = 1;
+  string player_id = 2;  
+  string player_obj = 3;  
+}
+
+message HeartbeatPacket {
+  int64 timestamp = 1;
+}
+
+
+message DisconnectPacket {
+  string reason = 1;
+}
+
+message Vector3Proto {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+}
+
+message QuaternionProto {
+    float x = 1;
+    float y = 2;
+    float z = 3;
+    float w = 4;
+}
+
+message GameObjectsState {
+    uint32 object_id = 1;
+    Vector3Proto position = 2;
+    QuaternionProto rotation = 3;
+    Vector3Proto linear_velocity = 4;
+    Vector3Proto angular_velocity = 5;
+    uint32 object_type = 6;
+} 
+
+message GameUpdate {
+    uint64 server_tick = 1;
+    repeated GameObjectsState object_states = 2;
+}
